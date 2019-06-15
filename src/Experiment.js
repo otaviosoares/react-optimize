@@ -28,6 +28,10 @@ class Experiment extends React.Component {
       throw new Error("Please specify the experiment id");
     }
 
+    if (!window.google_optimize) {
+      return this.updateVariant();
+    }
+
     // Delayed init
     const hideEnd =
       window.dataLayer && window.dataLayer.hide && window.dataLayer.hide.end;
@@ -40,18 +44,20 @@ class Experiment extends React.Component {
       this.delayedInitialization();
     }
 
-    window.gtag && window.gtag("event", "optimize.callback", {
-      name: this.props.id,
-      callback: this.updateVariant
-    });
+    window.gtag &&
+      window.gtag("event", "optimize.callback", {
+        name: this.props.id,
+        callback: this.updateVariant
+      });
   }
 
   componentWillUnmount() {
-    window.gtag && window.gtag("event", "optimize.callback", {
-      name: this.props.id,
-      callback: this.updateVariant,
-      remove: true
-    });
+    window.gtag &&
+      window.gtag("event", "optimize.callback", {
+        name: this.props.id,
+        callback: this.updateVariant,
+        remove: true
+      });
   }
 
   render() {
